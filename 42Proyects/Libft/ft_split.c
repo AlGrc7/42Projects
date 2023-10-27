@@ -6,14 +6,13 @@
 /*   By: albertga <albertga@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/12 21:32:57 by albertga          #+#    #+#             */
-/*   Updated: 2023/10/17 15:23:58 by albertga         ###   ########.fr       */
+/*   Updated: 2023/10/23 20:31:48 by albertga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 /*Split reserva (utilizando malloc(3)) un array de strings resultante de separar
 la string ’s’ en substrings utilizando el caracter ’c’ como delimitador.
 El array debe terminar con un puntero NULL*/
-
 #include "libft.h"
 
 static int	ft_wordcounter(char const *s, char c)

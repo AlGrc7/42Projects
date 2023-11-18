@@ -6,7 +6,7 @@
 /*   By: albertga <albertga@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/23 11:48:23 by albertga          #+#    #+#             */
-/*   Updated: 2023/11/06 20:02:46 by albertga         ###   ########.fr       */
+/*   Updated: 2023/11/18 22:36:00 by albertga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ char	*ft_read_prev_line(int fd, char *prev_line)
 	char	*buffer;
 	int		readbytes;
 
-	buffer = ft_calloc(BUFFER_SIZE + 1, sizeof(char));
+	buffer = ft_calloc(sizeof(char), BUFFER_SIZE + 1);
 	readbytes = 1;
 	if (!buffer)
 		return (NULL);
@@ -29,10 +29,11 @@ char	*ft_read_prev_line(int fd, char *prev_line)
 		if (readbytes == -1)
 		{
 			free(buffer);
-			return (NULL);
+			return (free(prev_line), NULL);
 		}
 		buffer[readbytes] = '\0';
-		prev_line = ft_strjoin(prev_line, buffer);
+		if (readbytes > 0)
+			prev_line = ft_strjoin(prev_line, buffer);
 	}
 	free(buffer);
 	return (prev_line);
@@ -45,6 +46,8 @@ char	*ft_new_prev_line(char *prev_line)
 	char	*new_prev_line;
 
 	i = 0;
+	if (!prev_line)
+		return (NULL);
 	while (prev_line[i] && prev_line[i] != '\n')
 		i++;
 	if (!prev_line[i])
@@ -52,8 +55,8 @@ char	*ft_new_prev_line(char *prev_line)
 		free(prev_line);
 		return (NULL);
 	}
-	new_prev_line = (char *)malloc(sizeof(char)
-			* (ft_strlen(prev_line) - i + 1));
+	new_prev_line = (char *)ft_calloc((ft_strlen(prev_line) - i + 2),
+			sizeof(char));
 	if (!new_prev_line)
 		return (NULL);
 	i++;
@@ -75,7 +78,7 @@ char	*ft_get_line(char *prev_line)
 		return (NULL);
 	while (prev_line[i] && prev_line[i] != '\n')
 		i++;
-	next_line = (char *)ft_calloc(i + 1, sizeof(char));
+	next_line = ft_calloc(i + 2, sizeof(char));
 	if (!next_line)
 		return (NULL);
 	i = 0;
@@ -98,7 +101,7 @@ char	*get_next_line(int fd)
 	char		*next_line;
 	static char	*prev_line;
 
-	if (fd < 0 || BUFFER_SIZE < 0)
+	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
 	prev_line = ft_read_prev_line(fd, prev_line);
 	if (!prev_line)
@@ -113,9 +116,16 @@ char	*get_next_line(int fd)
 // 	int		fd;
 // 	char	*line;
 
-// 	fd = open("file.txt", O_RDONLY);
+// 	fd = open("text.txt", O_RDONLY);
 // 	line = get_next_line(fd);
-// 	printf("\nbufersize = %d\nbuf = %s", BUFFER_SIZE, line);
+// 	printf("line = %s", line);
 // 	free(line);
+// 	line = get_next_line(fd);
+// 	printf("line = %s", line);
+// 	free(line);
+// 	line = get_next_line(fd);
+// 	printf("line = %s", line);
+// 	free(line);
+// 	close(fd);
 // 	return (0);
 // }

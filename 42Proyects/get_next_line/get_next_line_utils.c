@@ -6,7 +6,7 @@
 /*   By: albertga <albertga@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/23 11:49:00 by albertga          #+#    #+#             */
-/*   Updated: 2023/10/29 17:45:46 by albertga         ###   ########.fr       */
+/*   Updated: 2023/11/18 21:48:18 by albertga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,14 +19,17 @@ char	*ft_strchr(const char *s, int c)
 	int	i;
 
 	i = 0;
-	while (s[i] != '\0')
+	if (s)
 	{
+		while (s[i] != '\0')
+		{
+			if (s[i] == (char)c)
+				return ((char *)(s + i));
+			i++;
+		}
 		if (s[i] == (char)c)
 			return ((char *)(s + i));
-		i++;
 	}
-	if (s[i] == (char)c)
-		return ((char *)(s + i));
 	return (NULL);
 }
 
@@ -35,38 +38,40 @@ size_t	ft_strlen(const char *s)
 	int	i;
 
 	i = 0;
+	if (!s)
+		return (0);
 	while (s[i] != '\0')
 		i++;
 	return (i);
 }
 
-char	*ft_strjoin(char const *s1, char const *s2)
+char	*ft_strjoin(char *prev_line, char *buffer)
 {
-	int		i;
-	int		len1;
-	int		len2;
+	size_t	i;
+	size_t	j;
 	char	*str;
 
-	if (s1 && s2)
+	if (!prev_line)
 	{
-		len1 = ft_strlen(s1);
-		len2 = ft_strlen(s2);
-		str = (char *)malloc(sizeof(char) * (len1 + len2 + 1));
-		if (str == NULL)
-			return (NULL);
-		i = -1;
-		while (s1[++i])
-			str[i] = s1[i];
-		i = -1;
-		while (s2[++i])
-		{
-			str[len1] = s2[i];
-			len1++;
-		}
-		str[len1] = '\0';
-		return (str);
+		prev_line = (char *)ft_calloc(1, sizeof(char));
+		prev_line[0] = '\0';
 	}
-	return (NULL);
+	if (!prev_line || !buffer)
+		return (free(prev_line), NULL);
+	str = malloc(sizeof(char) * ((ft_strlen(prev_line)
+					+ ft_strlen(buffer)) + 1));
+	if (str == NULL)
+		return (NULL);
+	i = -1;
+	j = 0;
+	if (prev_line)
+		while (prev_line[++i] != '\0')
+			str[i] = prev_line[i];
+	while (buffer[j] != '\0')
+		str[i++] = buffer[j++];
+	str[ft_strlen(prev_line) + ft_strlen(buffer)] = '\0';
+	free(prev_line);
+	return (str);
 }
 
 void	*ft_calloc(size_t count, size_t size)
